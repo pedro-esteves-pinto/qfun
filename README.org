@@ -1,0 +1,35 @@
+* Overview
+QuickFunction is a more efficient but less flexible alternative to std::function.
+
+* Benchmark
+#+BEGIN_EXAMPLE 
+void std_function(::benchmark::State &state) {
+   size_t call_count = 0;
+   auto f = [&call_count]() { return call_count++; };
+   std::function<size_t()> ff (f); 
+
+   for (auto _ : state) {
+      ::benchmark::DoNotOptimize(ff());
+   }
+}
+BENCHMARK(std_function);
+
+void quick_function(::benchmark::State &state) {
+    size_t call_count = 0;
+    auto f = [&call_count]() { return call_count++; };
+    qfun::QuickFunction<size_t()> ff (f);
+    for (auto _ : state) {
+       ::benchmark::DoNotOptimize(ff());
+    }
+}
+BENCHMARK(quick_function);
+
+---------------------------------------------------------
+Benchmark               Time             CPU   Iterations
+---------------------------------------------------------
+std_function         1.78 ns         1.78 ns    386090937
+quick_function      0.234 ns        0.234 ns   1000000000
+
+#+END_EXAMPLE
+
+
